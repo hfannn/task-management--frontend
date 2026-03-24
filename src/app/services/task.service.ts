@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 export class TaskService {
   private readonly apiUrl = `${environment.apiBaseUrl}/tasks`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAll(filters?: { userId?: string; status?: string; priority?: string }): Observable<Task[]> {
     let params = new HttpParams();
@@ -75,11 +75,11 @@ export class TaskService {
       userId: task.userId ?? task.user?.id ?? null,
       user: task.user
         ? {
-            id: task.user.id,
-            name: task.user.name,
-            email: task.user.email,
-            role: task.user.role
-          }
+          id: task.user.id,
+          name: task.user.name,
+          email: task.user.email,
+          role: task.user.role
+        }
         : null,
       createdAt: task.createdAt
     };

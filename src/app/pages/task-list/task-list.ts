@@ -4,8 +4,17 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TaskService } from '../../services/task.service';
 import { UserService } from '../../services/user.service';
-import { Task } from '../../models/task.model';
+import { Task, TaskPriority, TaskStatus } from '../../models/task.model';
 import { User } from '../../models/user.model';
+
+type TaskForm = {
+  title: string;
+  description: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  dueDate: string;
+  userId: string;
+};
 
 @Component({
   selector: 'app-task-list',
@@ -31,21 +40,14 @@ export class TaskListComponent implements OnInit {
     priority: ''
   };
 
-  taskForm: {
-    title: string;
-    description: string;
-    status: 'TODO' | 'DOING' | 'DONE';
-    priority: 'LOW' | 'MEDIUM' | 'HIGH';
-    dueDate: string;
-    userId: string;
-  } = {
-      title: '',
-      description: '',
-      status: 'TODO',
-      priority: 'MEDIUM',
-      dueDate: '',
-      userId: ''
-    };
+  taskForm: TaskForm = {
+    title: '',
+    description: '',
+    status: 'TODO',
+    priority: 'MEDIUM',
+    dueDate: '',
+    userId: ''
+  };
 
   constructor(
     private taskService: TaskService,
@@ -141,7 +143,7 @@ export class TaskListComponent implements OnInit {
     this.successMessage = '';
     this.cdr.detectChanges();
 
-    const payload = {
+    const payload: Partial<Task> = {
       title: this.taskForm.title.trim(),
       description: this.taskForm.description.trim(),
       status: this.taskForm.status,
@@ -199,8 +201,8 @@ export class TaskListComponent implements OnInit {
     this.taskForm = {
       title: task.title ?? '',
       description: task.description ?? '',
-      status: (task.status as 'TODO' | 'DOING' | 'DONE') ?? 'TODO',
-      priority: (task.priority as 'LOW' | 'MEDIUM' | 'HIGH') ?? 'MEDIUM',
+      status: task.status ?? 'TODO',
+      priority: task.priority ?? 'MEDIUM',
       dueDate: task.dueDate ?? '',
       userId: task.userId ? String(task.userId) : ''
     };
@@ -232,6 +234,7 @@ export class TaskListComponent implements OnInit {
             userId: ''
           };
         }
+
         this.successMessage = 'Xóa task thành công.';
         this.loadTasks();
         this.cdr.detectChanges();

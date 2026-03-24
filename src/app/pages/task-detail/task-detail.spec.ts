@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { TaskDetailComponent } from './task-detail';
 import { TaskService } from '../../services/task.service';
@@ -14,17 +14,22 @@ describe('TaskDetailComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: {
-              paramMap: {
-                get: () => '1'
-              }
-            }
+            paramMap: of(convertToParamMap({ id: '1' }))
           }
         },
         {
           provide: TaskService,
           useValue: {
-            getById: () => of({ id: 1, title: 'Demo', description: '', status: 'TODO', priority: 'LOW', dueDate: '', userId: null })
+            getById: () =>
+              of({
+                id: 1,
+                title: 'Demo',
+                description: '',
+                status: 'TODO',
+                priority: 'LOW',
+                dueDate: '',
+                userId: null
+              })
           }
         },
         {

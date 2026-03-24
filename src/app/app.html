@@ -1,13 +1,20 @@
-<div class="page-shell">
-  <div class="app-header">
-    <h1 class="app-title">Task Management System</h1>
+<div class="app-shell">
+  <header class="app-topbar">
+    <div class="brand-block">
+      <div class="brand-mark">TM</div>
+      <div>
+        <div class="brand-title">Task Management</div>
 
+      </div>
+    </div>
 
-    <div class="nav-basic">
+    <nav class="app-nav">
       <a routerLink="/tasks" routerLinkActive="active-link">Tasks</a>
       <a routerLink="/users" routerLinkActive="active-link">Users</a>
-    </div>
-  </div>
+    </nav>
+  </header>
 
-  <router-outlet></router-outlet>
+  <main class="app-content">
+    <router-outlet></router-outlet>
+  </main>
 </div>

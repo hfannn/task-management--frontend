@@ -1,49 +1,60 @@
 <div class="page-header">
   <div>
-    <h2>Chi tiết </h2>
+    <h1 class="page-title">Task Detail</h1>
 
   </div>
-
-  <a routerLink="/tasks" class="back-link">← Quay lại danh sách</a>
+  <div>
+    <a routerLink="/tasks" class="link-button">← Back to Task List</a>
+  </div>
 </div>
 
 <div class="message error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
-<div class="card" *ngIf="task">
+<section class="panel-card detail-card" *ngIf="loading">
+  <div class="empty-text">Đang tải chi tiết task...</div>
+</section>
+
+<section class="panel-card detail-card" *ngIf="task && !loading">
   <div class="detail-grid">
-    <div>
-      <strong>ID</strong>
-      {{ task.id }}
+    <div class="detail-item">
+      <span class="detail-label">ID</span>
+      <div class="detail-value">{{ task.id }}</div>
     </div>
 
-    <div>
-      <strong>Title</strong>
-      {{ task.title }}
+    <div class="detail-item">
+      <span class="detail-label">Title</span>
+      <div class="detail-value">{{ task.title }}</div>
     </div>
 
-    <div>
-      <strong>Status</strong>
-      {{ task.status }}
+    <div class="detail-item">
+      <span class="detail-label">Status</span>
+      <div class="detail-value">
+        <span class="badge" [ngClass]="task.status.toLowerCase()">{{ task.status }}</span>
+      </div>
     </div>
 
-    <div>
-      <strong>Priority</strong>
-      {{ task.priority }}
+    <div class="detail-item">
+      <span class="detail-label">Priority</span>
+      <div class="detail-value">
+        <span class="badge" [ngClass]="'priority-' + task.priority.toLowerCase()">
+          {{ task.priority }}
+        </span>
+      </div>
     </div>
 
-    <div>
-      <strong>Due Date</strong>
-      {{ task.dueDate || '-' }}
+    <div class="detail-item">
+      <span class="detail-label">Due Date</span>
+      <div class="detail-value">{{ task.dueDate || '-' }}</div>
     </div>
 
-    <div>
-      <strong>Assignee</strong>
-      {{ assignedUserName }}
+    <div class="detail-item">
+      <span class="detail-label">Assignee</span>
+      <div class="detail-value">{{ assignedUserName }}</div>
     </div>
 
-    <div class="full-row">
-      <strong>Description</strong>
-      {{ task.description || 'No description' }}
+    <div class="detail-item detail-full">
+      <span class="detail-label">Description</span>
+      <div class="detail-value">{{ task.description || 'No description' }}</div>
     </div>
   </div>
-</div>
+</section>
