@@ -1,20 +1,49 @@
 <div class="page-header">
   <div>
-    <h2>Task Detail</h2>
-    <a routerLink="/tasks">Back to Task List</a>
+    <h2>Chi tiết </h2>
+
   </div>
+
+  <a routerLink="/tasks" class="back-link">← Quay lại danh sách</a>
 </div>
 
 <div class="message error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
 <div class="card" *ngIf="task">
   <div class="detail-grid">
-    <div><strong>ID:</strong> {{ task.id }}</div>
-    <div><strong>Title:</strong> {{ task.title }}</div>
-    <div><strong>Status:</strong> {{ task.status }}</div>
-    <div><strong>Priority:</strong> {{ task.priority }}</div>
-    <div><strong>Due Date:</strong> {{ task.dueDate || '-' }}</div>
-    <div><strong>Assignee:</strong> {{ assignedUserName }}</div>
-    <div class="full-row"><strong>Description:</strong> {{ task.description || 'No description' }}</div>
+    <div>
+      <strong>ID</strong>
+      {{ task.id }}
+    </div>
+
+    <div>
+      <strong>Title</strong>
+      {{ task.title }}
+    </div>
+
+    <div>
+      <strong>Status</strong>
+      {{ task.status }}
+    </div>
+
+    <div>
+      <strong>Priority</strong>
+      {{ task.priority }}
+    </div>
+
+    <div>
+      <strong>Due Date</strong>
+      {{ task.dueDate || '-' }}
+    </div>
+
+    <div>
+      <strong>Assignee</strong>
+      {{ assignedUserName }}
+    </div>
+
+    <div class="full-row">
+      <strong>Description</strong>
+      {{ task.description || 'No description' }}
+    </div>
   </div>
 </div>
