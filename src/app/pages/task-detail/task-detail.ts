@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TaskService } from '../../services/task.service';
 import { UserService } from '../../services/user.service';
@@ -17,42 +17,60 @@ export class TaskDetailComponent implements OnInit {
   task: Task | null = null;
   users: User[] = [];
   loading = true;
+  errorMessage = '';
 
   constructor(
     private route: ActivatedRoute,
     private taskService: TaskService,
-    private userService: UserService
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.route.paramMap.subscribe(params => {
+      const id = Number(params.get('id'));
+
+      if (!id) {
+        this.task = null;
+        this.loading = false;
+        this.errorMessage = 'ID task không hợp lệ.';
+        this.cdr.detectChanges();
+        return;
+      }
+
+      this.loadTaskDetail(id);
+    });
 
     this.userService.getAll().subscribe({
       next: (users) => {
-        this.users = users;
-
-        this.taskService.getById(id).subscribe({
-          next: (task) => {
-            this.task = task;
-            this.loading = false;
-          },
-          error: (err) => {
-            console.error(err);
-            this.loading = false;
-          }
-        });
+        this.users = users ?? [];
+        this.cdr.detectChanges();
       },
-      error: () => {
-        this.taskService.getById(id).subscribe({
-          next: (task) => {
-            this.task = task;
-            this.loading = false;
-          },
-          error: (err) => {
-            console.error(err);
-            this.loading = false;
-          }
-        });
+      error: (err) => {
+        console.error('Load users error:', err);
+        this.users = [];
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  loadTaskDetail(id: number): void {
+    this.loading = true;
+    this.errorMessage = '';
+    this.task = null;
+    this.cdr.detectChanges();
+
+    this.taskService.getById(id).subscribe({
+      next: (task) => {
+        this.task = task;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Load task detail error:', err);
+        this.errorMessage = 'Không tải được chi tiết task.';
+        this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }

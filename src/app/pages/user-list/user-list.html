@@ -1,64 +1,58 @@
-<h2>Quản lý người dùng</h2>
-
-<form #form="ngForm" (ngSubmit)="submit(form)">
+<div class="page-header">
     <div>
-        <label>Name</label>
-        <input type="text" name="name" [(ngModel)]="userForm.name" #name="ngModel" required minlength="2" />
-        <small *ngIf="name.invalid && name.touched">
-            Name phải có ít nhất 2 ký tự
-        </small>
+        <h2>Quản lý người dùng</h2>
     </div>
+</div>
 
-    <div>
-        <label>Email</label>
-        <input type="email" name="email" [(ngModel)]="userForm.email" #email="ngModel" required email />
-        <small *ngIf="email.invalid && email.touched">
-            Email không hợp lệ
-        </small>
+<div class="message error" *ngIf="errorMessage">{{ errorMessage }}</div>
+<div class="message success" *ngIf="successMessage">{{ successMessage }}</div>
+
+<div class="card">
+    <h3>{{ editingId ? 'Cập nhật người dùng' : 'Tạo người dùng' }}</h3>
+
+    <form #userNgForm="ngForm" (ngSubmit)="submit(userNgForm)">
+        <div class="form-grid">
+            <input type="text" name="name" placeholder="Name" [(ngModel)]="userForm.name" required />
+            <input type="email" name="email" placeholder="Email" [(ngModel)]="userForm.email" required />
+            <input type="text" name="role" placeholder="Role" [(ngModel)]="userForm.role" required />
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="btn btn-primary" [disabled]="submitting">
+                {{ submitting ? 'Đang lưu...' : (editingId ? 'Update' : 'Tạo User') }}
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="resetForm(userNgForm)">Reset</button>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Danh sách User</h3>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users; trackBy: trackByUserId">
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role }}</td>
+                    <td class="action-cell">
+                        <button type="button" class="btn btn-warning" (click)="edit(user)">Edit</button>
+                        <button type="button" class="btn btn-danger" (click)="delete(user.id)">Delete</button>
+                    </td>
+                </tr>
+                <tr *ngIf="users.length === 0">
+                    <td colspan="4" class="empty-text">Không có user nào</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
-    <div>
-        <label>Role</label>
-        <input type="text" name="role" [(ngModel)]="userForm.role" #role="ngModel" required minlength="2" />
-        <small *ngIf="role.invalid && role.touched">
-            Role không được để trống
-        </small>
-    </div>
-
-    <button type="submit" [disabled]="form.invalid || submitting">
-        {{ submitting ? 'Đang xử lý...' : (editingId ? 'Cập nhật User' : 'Tạo User') }}
-    </button>
-
-    <button type="button" (click)="resetForm(form)">Reset</button>
-</form>
-
-<p *ngIf="successMessage">{{ successMessage }}</p>
-<p *ngIf="errorMessage">{{ errorMessage }}</p>
-
-<p *ngIf="loading">Đang tải danh sách user...</p>
-
-<table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        <tr *ngFor="let user of users">
-            <td>{{ user.name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.role }}</td>
-            <td>
-                <button (click)="edit(user)">Edit</button>
-                <button (click)="delete(user.id)">Delete</button>
-                <button [routerLink]="['/tasks']" [queryParams]="{ userId: user.id }">
-                    View Tasks
-                </button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+</div>
