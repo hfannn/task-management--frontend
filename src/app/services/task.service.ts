@@ -49,7 +49,11 @@ export class TaskService {
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete(`${this.apiUrl}/${id}`, {
+      responseType: 'text'
+    }).pipe(
+      map(() => void 0)
+    );
   }
 
   private toPayload(task: Partial<Task>) {
